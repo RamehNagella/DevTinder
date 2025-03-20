@@ -55,8 +55,69 @@ app.delete("/user", (req, res) => {
 });
 
 //This will match all th HTTP method API calls to /data path
-app.use("/data", (req, res) => {
-  res.send("data available here");
+// app.use("/data", (req, res) => {
+//   res.send("data available here");
+// });
+
+//ADVanced routing to api
+// works only for /abc
+app.get("/abc", (req, res) => {
+  res.send("advanced routing technique");
+});
+// works for /abc, /ac
+app.get("/ab?c", (req, res) => {
+  res.send("advanced routing technique ab?c");
+});
+
+// works for /abc /abbc, /abbbbbc, /abbbbbbbbc wont work for /ab1c /ab234sfsdc
+app.get("/ab+c", (req, res) => {
+  res.send("advanced routing technique ab+c");
+});
+
+//works for /abcd, /abanthingcd, /abdlkjfksjdflkcd/
+app.get("/ab*cd", (req, res) => {
+  res.send("advanced routing technique ab*cd");
+});
+
+// bc optional, works for /ad
+app.get("/a(bc)?d", (req, res) => {
+  res.send("advanced routing technique a(bc)?d");
+});
+
+// works /abcbcbcd, /abcbcbcbcbcbcd
+app.get("/a(bc)+d", (req, res) => {
+  res.send("advanced routing technique a(bc)+d");
+});
+
+// // works for any route  if it has "a" in it like /car /jar
+// app.get(/a/, (req, res) => {
+//   res.send("advanced routing technique /a/");
+// });
+
+//works for any route if it has fly in between route string /butterfly
+app.get(/.*fly$/, (req, res) => {
+  res.send("advanced routing technique /.*fly&/");
+});
+
+//DYNAMIC ROUTES
+//accessing userId (http://localhost:7777/admin?userId=101)
+app.get("/admin", (req, res) => {
+  console.log(req.query); //{ userId: '101' }
+  res.send("advanced routing technique /admin?userId=101");
+});
+//MAKING ROUTES DYNAMIC(: with the help of colon we make dynamic)
+//with req.params we will get userDetails
+//http://localhost:7777/admin/102
+app.get("/admin/:userId", (req, res) => {
+  console.log(req.query); //{}
+  console.log(req.params); //{ userId: '102' }
+  res.send("getting user details from the routes path.");
+});
+
+app.get("/admin/:userId/:name/:password", (req, res) => {
+  console.log(req.query); //{}
+  console.log(req.params); //{ userId: '102', name: 'akshay', password: 'tester' }
+  res.send("getting user details from the routes path.");
 });
 // app.listen(3000);
 app.listen(7777, () => {
