@@ -24,3 +24,10 @@
 - Use of regex in routes /a/ , /.\*fly$/
 - Reading the query params in the routes
 - Readin the dynamic routes
+
+- Handling Mutliple Route Handlers
+- next()
+- next function and errors along with res.send()
+
+- app.use("/user", rH, rH2, rH3, rH4, rH5, rH6);
+- app.use("/user", [rH, rH2, rH3, rH4, rH5, rH6]);

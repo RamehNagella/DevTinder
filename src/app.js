@@ -25,6 +25,8 @@ app.use("/data", (req, res) => {
   res.send("data available here");
 });
 */
+
+/*
 const express = require("express");
 
 const app = express();
@@ -120,6 +122,164 @@ app.get("/admin/:userId/:name/:password", (req, res) => {
   res.send("getting user details from the routes path.");
 });
 // app.listen(3000);
+app.listen(7777, () => {
+  console.log("server connected succssfully and listening to the port.");
+});
+
+*/
+
+const express = require("express");
+
+const app = express();
+
+// app.use("/user", (req, res) => {
+//   res.send("Route Handler 1");
+// });
+
+// app.use("/user", (req, res) => {});
+/*
+app.use(
+  "/user",
+  (req, res) => {
+    console.log("Handling route user1!");
+    res.send("1st Response");
+  },
+  (req, res) => {
+    console.log("Handling route user2!");
+    res.send("2nd Response");
+  }
+);
+
+app.use(
+  "/user",
+  (req, res, next) => {
+    console.log("Handling route user1!");
+    // res.send("1st Response");
+    next();
+  },
+  (req, res) => {
+    console.log("Handling route user2!");
+    res.send("2nd Response");
+    console.log("Handling route user21!"); //it doesnot print
+  }
+  );
+  // Handling route user1!
+  // Handling route user2!
+  // Handling route user21!
+  
+  app.use(
+    "/user",
+    (req, res, next) => {
+      console.log("Handling route user1!");
+      res.send("1st Response");
+      next();
+    },
+    (req, res) => {
+      console.log("Handling route user2!");
+      res.send("2nd Response");
+      console.log("Handling route user21!"); //it doesnot print
+  }
+  );
+  // Handling route user1!
+  // Handling route user2!
+  // Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+  
+  
+  app.use(
+    "/user",
+    (req, res, next) => {
+      console.log("Handling route user1!");
+      next();
+      res.send("1st Response");
+  },
+  (req, res) => {
+    console.log("Handling route user2!");
+    res.send("2nd Response");
+    // console.log("Handling route user21!"); //it doesnot print
+  }
+);
+// Handling route user1!
+// Handling route user2!
+// Handling route user21!
+// Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+// Error at     at /home/admin1/Desktop/DevTinder/src/app.js:194:9
+
+app.use(
+  "/user",
+  (req, res, next) => {
+    console.log("Handling route user1!");
+    next();
+    console.log("Handling route user1!");
+    console.log("Handling route user1!");
+
+    res.send("1st Response");
+  },
+  (req, res) => {
+    console.log("Handling route user2!");
+    res.send("2nd Response");
+    console.log("Handling route user21!"); //it doesnot print
+  }
+  );
+  // Handling route user1!
+  // Handling route user2!
+  // Handling route user21!
+  // Handling route user11!
+  // Handling route user12!
+  // Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+app.use(
+  "/user",
+  (req, res, next) => {
+    console.log("Handling route user1!");
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user2!");
+    // res.send("2nd Response");
+
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user3!");
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user4!");
+    res.send("4th Response");
+    next();
+  }
+);
+// Handling route user1!
+// Handling route user2!
+// Handling route user3!
+// Handling route user4!
+*/
+app.use("/user", rH, rH2, rH3, rH4, rH5, rH6);
+app.use("/user", [rH, rH2, rH3, rH4, rH5, rH6]);
+app.use("/user", rH, rH2, rH3, [rH4, rH5, rH6]);
+app.use("/user", [rH, rH2, rH3], rH4, rH5, rH6);
+app.use("/user", [
+  (req, res, next) => {
+    console.log("Handling route user1!");
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user2!");
+    // res.send("2nd Response");
+
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user3!");
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user4!");
+    res.send("4th Response");
+    // next();
+  }
+]);
+
+// 4th Response
 app.listen(7777, () => {
   console.log("server connected succssfully and listening to the port.");
 });
