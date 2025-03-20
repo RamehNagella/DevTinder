@@ -127,6 +127,7 @@ app.listen(7777, () => {
 });
 
 */
+/*
 
 const express = require("express");
 
@@ -137,7 +138,6 @@ const app = express();
 // });
 
 // app.use("/user", (req, res) => {});
-/*
 app.use(
   "/user",
   (req, res) => {
@@ -252,11 +252,13 @@ app.use(
 // Handling route user2!
 // Handling route user3!
 // Handling route user4!
-*/
+let rH = "request Handler";
 app.use("/user", rH, rH2, rH3, rH4, rH5, rH6);
 app.use("/user", [rH, rH2, rH3, rH4, rH5, rH6]);
 app.use("/user", rH, rH2, rH3, [rH4, rH5, rH6]);
 app.use("/user", [rH, rH2, rH3], rH4, rH5, rH6);
+All are work in the same way and gives same output
+
 app.use("/user", [
   (req, res, next) => {
     console.log("Handling route user1!");
@@ -279,7 +281,150 @@ app.use("/user", [
   }
 ]);
 
-// 4th Response
+*/
+
+//EXPRESS WORK FLOW
+
+/*
+
+app.use("/", (req, res, next) => {
+  res.send("Handling / route");
+  // next();
+});
+
+app.use(
+  "/user",
+  (req, res, next) => {
+    console.log("Handling route user1!");
+    res.send("1st Response");
+
+    next();
+  },
+  (req, res, next) => {
+    console.log("Handling route user2!");
+    res.send("2nd Response");
+
+    next();
+  }
+);
+*/
+/*
+app.get("/admin/getAllData", (req, res, next) => {
+  //Logic for checking if the request is authorized
+  const token = "xdsfdyz";
+  const isAdminAuthorized = token === "xyz";
+
+  if (isAdminAuthorized) {
+    res.send("all Data sent.");
+  } else {
+    res.status(401).send("Unauthorised request.");
+  }
+});
+app.get("/admin/deleteUser", (req, res, next) => {
+  //Logic for checking if the request is authorized
+  const token = "xdsfdyz";
+  const isAdminAuthorized = token === "xyz";
+
+  if (isAdminAuthorized) {
+    res.send("all Data sent.");
+  } else {
+    res.status(401).send("Unauthorised request.");
+  }
+  res.send("all Data sent.");
+});
+*/
+//HANDLE Auth Middleware all request GET, POST,PUT,DELET,PATCH
+// app.use()
+// app.all() both are work for all the methods but they have some difference between them
+
+//
+
+//
+
+/*
+const express = require("express");
+
+const app = express();
+
+const { adminAuth, userAuth } = require("./middlewares/auth");
+
+// app.use("/admin", (req, res, next) => {
+//   console.log("Admin auth is getting check ");
+//   const token = "xyz";
+//   const isAdminAuthorized = token === "xyz";
+
+//   if (!isAdminAuthorized) {
+//     res.status(401).send("Unathorised request.");
+//     //once authorization failed request dont look for next route handlers for that don't write next() function inside this block
+//   } else {
+//     next();
+//   }
+// });
+
+//the above middle ware can be written as below
+app.use("/admin", adminAuth);
+
+//this login api doesnot need in authorization
+app.post("/user/login", (req, res) => {
+  res.send("User logged in successfully.");
+});
+app.get("/user", userAuth, (req, res, next) => {
+  res.send("User Data sent");
+});
+
+app.get("/admin/getAllData", (req, res, next) => {
+  res.send("all Data sent.");
+});
+app.get("/admin/deleteUser", (req, res, next) => {
+  res.send("all Data deleted.");
+});
+app.listen(7777, () => {
+  console.log("server connected succssfully and listening to the port.");
+});
+
+*/
+
+const express = require("express");
+
+const app = express();
+
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(500).send("Somthing went wrong.");
+  }
+});
+//
+// //This is the graceful way of handling the error
+
+// app.get("/getUserData", (req, res, next) => {
+//   //Login of DB call and get user data
+
+//   throw new Error("random error thrown");
+//   res.send("User data sent");
+// });
+//this is not the good wat of handling the error
+// app.use("path", (err,req,res,next)=>{})
+// 1st parameter is error argument
+//last argument must be next
+
+app.get("/getUserData", (req, res, next) => {
+  try {
+    //Login of DB call and get user data
+
+    throw new Error("random error thrown");
+    res.send("User data sent");
+  } catch (err) {
+    res.status(500).send("Some error contact support team.");
+  }
+});
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(500).send("Somthing went wrong.");
+  }
+});
+//Always write error code "/" route so that it matches all the routes that starts with /
+// Always write error code at the end of the all the routes so that it handles error gracefully.
+
 app.listen(7777, () => {
   console.log("server connected succssfully and listening to the port.");
 });
