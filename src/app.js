@@ -501,8 +501,8 @@ const app = express();
 
 //create API (to store the user data on databse);
 
+/*
 app.post("/signup", async (req, res) => {
-  /*
   //create user info object
   // const userObj = {
   //   firstName: "Akshay",
@@ -527,6 +527,7 @@ app.post("/signup", async (req, res) => {
   // then send the  response to the database
   res.send("user added successfully.");
 */
+/*
   //with error handling and all the clean way of writing above code is
 
   const user = new User({
@@ -541,6 +542,27 @@ app.post("/signup", async (req, res) => {
     res.status(200).send("user added successfully.");
   } catch (err) {
     res.status(500).send("Error saving the user: ", err.message);
+  }
+});
+*/
+
+app.use(express.json());
+//storing the user data Dynamically
+app.post("/signup", async (req, res) => {
+  //reading user data sent from clien
+  // console.log(req.body);//undefined
+  //because to read json data we need express.json() middleware
+  console.log(req.body);
+  //create new Instance
+  const user = new User(req.body);
+
+  try {
+    //save the user
+    await user.save();
+    //send the response
+    res.status(200).send("User data saved successfully.");
+  } catch (err) {
+    res.status(400).send("Error storing the user: " + err.message);
   }
 });
 
