@@ -38,3 +38,23 @@
 - Write dummy auth middleware for admin
 - Write a dummy auth middleware for all user routes, except /user/login
   -Error Handling using app.user("/", (err,req,res,next)={});
+
+5.
+
+- Create a free cluster on Mongodb official wbsite(Mongo Atlas)
+- Install Mongoose library
+- Connect your application to the database <"cnnection-url"/devTinder>
+- Call the connectDB function and connect to database before starting application on the server port(7777)
+
+6.
+
+- Create UserSchema & user Model
+- Create POST /signup API to add data to database
+- Push some documents using API calls from postman
+- Handle Error with try-catch
+
+7.
+
+- Difference between Javascript Object & JSON
+- Add the express.json middleware
+- Make your signup API dynamic to recieve data from the end user

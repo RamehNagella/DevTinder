@@ -340,7 +340,6 @@ app.get("/admin/deleteUser", (req, res, next) => {
 //
 
 //
-
 /*
 const express = require("express");
 
@@ -364,35 +363,43 @@ const { adminAuth, userAuth } = require("./middlewares/auth");
 //the above middle ware can be written as below
 app.use("/admin", adminAuth);
 
-//this login api doesnot need in authorization
+// this login api doesnot need in authorization
 app.post("/user/login", (req, res) => {
   res.send("User logged in successfully.");
 });
-app.get("/user", userAuth, (req, res, next) => {
+app.get("/user", (req, res, next) => {
+  console.log("user1");
   res.send("User Data sent");
 });
+app.get("/user/data", (req, res, next) => {
+  console.log("user2");
+  res.send("User Data");
+});
 
-app.get("/admin/getAllData", (req, res, next) => {
+app.get("/admin/getAllData", adminAuth, (req, res, next) => {
   res.send("all Data sent.");
 });
-app.get("/admin/deleteUser", (req, res, next) => {
+app.get("/admin/deleteUser", adminAuth, (req, res, next) => {
   res.send("all Data deleted.");
 });
 app.listen(7777, () => {
   console.log("server connected succssfully and listening to the port.");
 });
-
 */
+
+/*
+
+//ERROR HANDLING
 
 const express = require("express");
 
 const app = express();
 
-app.use("/", (err, req, res, next) => {
-  if (err) {
-    res.status(500).send("Somthing went wrong.");
-  }
-});
+// app.use("/", (err, req, res, next) => {
+//   if (err) {
+//     res.status(500).send("Somthing went wrong.");
+//   }
+// });
 //
 // //This is the graceful way of handling the error
 
@@ -417,14 +424,133 @@ app.get("/getUserData", (req, res, next) => {
     res.status(500).send("Some error contact support team.");
   }
 });
+// app.use("/", (err, req, res, next) => {
+//   if (err) {
+//     res.status(500).send("Somthing went wrong.");
+//   }
+// });
+//Always write error code "/" route so that it matches all the routes that starts with /
+// Always write error code at the end of the all the routes so that it handles error gracefully.
+
+// app.get("/user", (req, res, next) => {
+//   console.log("user1");
+//   res.send("User Data sent");
+// });
+// app.get("/user/data", (req, res, next) => {
+//   console.log("user2");
+//   res.send("User Data");
+// });
+
+app.use("/user", (req, res, next) => {
+  console.log("/ route written on the top");
+  res.send("Respons1");
+});
+app.use("/user/data", (req, res) => {
+  console.log("middleware 2");
+  res.send("Respons2");
+});
+// app.use("/", (req, res, next) => {
+//   console.log("/ route written on the top");
+//   res.send("Respons1");
+//   next();
+// });
+app.listen(7777, () => {
+  console.log("server connected succssfully and listening to the port.");
+});
+*/
+/*
+const express = require("express");
+
+const app = express();
+
 app.use("/", (err, req, res, next) => {
   if (err) {
+    //log your error
     res.status(500).send("Somthing went wrong.");
   }
 });
-//Always write error code "/" route so that it matches all the routes that starts with /
-// Always write error code at the end of the all the routes so that it handles error gracefully.
+
+app.get("/getUserData", (req, res, next) => {
+  try {
+    //Login of DB call and get user data
+
+    throw new Error("random error thrown");
+    res.send("User data sent");
+  } catch (err) {
+    res.status(500).send("Some error contact support team.");
+  }
+});
+
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    //log your error
+    res.status(500).send("Somthing went wrong.");
+  }
+});
 
 app.listen(7777, () => {
   console.log("server connected succssfully and listening to the port.");
 });
+*/
+const express = require("express");
+// require("./config/database");
+const connectDB = require("./config/database");
+//download userSchema modelfile
+const User = require("./models/user");
+const app = express();
+
+//create API (to store the user data on databse);
+
+app.post("/signup", async (req, res) => {
+  /*
+  //create user info object
+  // const userObj = {
+  //   firstName: "Akshay",
+  //   lastName: "Saini",
+  //   emailId: "akshay@saini.com",
+  //   password: "1234"
+  // };
+  // //create new user with above data
+  // // create new Instance
+  // // const user = new User(userObj);
+  // // the above lines are also can be wrtten as
+
+  const user = new User({
+    firstName: "Akshay",
+    lastName: "Saini",
+    emailId: "akshay@saini.com",
+    password: "1234"
+  });
+
+  //save the user data  (.save gives a promise hence await is used instead of then and catch)
+  await user.save();
+  // then send the  response to the database
+  res.send("user added successfully.");
+*/
+  //with error handling and all the clean way of writing above code is
+
+  const user = new User({
+    firstName: "Virat",
+    lastName: "Kohli",
+    emailId: "virat@kohli.com",
+    password: "virat@123"
+  });
+
+  try {
+    await user.save();
+    res.status(200).send("user added successfully.");
+  } catch (err) {
+    res.status(500).send("Error saving the user: ", err.message);
+  }
+});
+
+connectDB()
+  .then(() => {
+    console.log("Database connection establised...");
+    app.listen(7777, () => {
+      console.log("server connected succssfully and listening to the port.");
+    });
+  })
+  .catch((err) => {
+    console.log("cannot connect databse!");
+  });
