@@ -68,3 +68,12 @@
 - Explore the Mongoose Documentation for MOdel methods
 - What re the options in a model.findByIdAndUpdate method, expore all the options
 - API updata the user with emailId
+
+8
+
+- Explore schema options from the documention
+- add required, unique, lowercase,min, minLength, trim
+- Add default,
+- Create a custome validate function for gender
+- Improve the DB schema - PUT all appropriate validations on each feild in Schema
+- Add timestamp to schema
