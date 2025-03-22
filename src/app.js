@@ -693,7 +693,16 @@ app.post("/signup", async (req, res) => {
     //send the response
     res.status(200).send("User data saved successfully.");
   } catch (err) {
-    res.status(400).send("Error storing the user: " + err.message);
+    if (err.name === "ValidationError") {
+      // return res.status(400).json({ error: err.message });
+      res.status(400).send("Error storing the user: " + err.message);
+    }
+    if (err.code === 11000) {
+      return res
+        .status(400)
+        .send({ error: "Email already exists! Please use a different email." });
+    }
+    res.status(500).send({ error: "Internal Server Error" });
   }
 });
 
@@ -761,7 +770,7 @@ app.patch("/user/:userId", async (req, res) => {
 
   try {
     //restrict update to some fields
-    const ALLOWED_UPDATES = ["photourl", "gender", "age", "skills", "about"];
+    const ALLOWED_UPDATES = ["photoUrl", "gender", "age", "skills", "about"];
     const isUpdateAllowed = Object.keys(data).every((k) => {
       // console.log("k", k);
       return ALLOWED_UPDATES.includes(k);
