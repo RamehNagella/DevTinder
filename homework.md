@@ -78,6 +78,9 @@
 - Improve the DB schema - PUT all appropriate validations on each feild in Schema
 - Add timestamp to schema
 - API level validation on Patch requrest & signup post api
+- Add API validatation for each field
 - DATA SANITIZATION Means API LEVEL VALIDATION
 - API level validation for Patch request & signup post api
 - DATA sanitizing - Add API validation for each field
+- INstall validator
+- Explore the validator library functions and Use validator function for password, email, photoUrl
