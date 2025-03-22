@@ -62,14 +62,15 @@ app.get("/login", async (req, res) => {
       // throw new Error("Email is not valid or Email is not present in the DB"); // which is wrong because we should not give the info about db data
       throw new Error("Invalide credentials!");
     }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    // in the parameters 1st one is userEnterd password from browser and 2nd one is password stored in database
+
+    // const isPasswordValid = await user.getVerifiedPassword(password);
 
     if (isPasswordValid) {
       //create a token
-      const token = jwt.sign({ _id: user._id }, "DEV@tinder$123", {
-        expiresIn: "7d"
-      });
+      const token = await user.getJWT();
+      console.log(">>", token);
       //add the token to cookie  and send the response back to the server
       // res.cookie("token", token);
       // res.cookie("token", token, {
@@ -78,7 +79,7 @@ app.get("/login", async (req, res) => {
       //   sameSite: "Strict"
       // });
       res.cookie("token", token, {
-        expires: new Date(Date.now() + 84 * 3600000)
+        expires: new Date(Date.now() + 8 * 3600000)
       });
       //7days cookie will expire
 

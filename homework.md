@@ -133,4 +133,5 @@ CSRF Protection: With SameSite settings.
 -userAuth middleware
 
 - Add the userAuth middleware in profile API and a new sendConnectionRequest API
-  -Set the expirey of JWT token and cokkies to 7dayS
+- Set the expirey of JWT token and cokkies to 7dayS- - Create userSchem method to getJWT()
+- Create userSchema method to getVerifiedPassword()
