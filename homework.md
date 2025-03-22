@@ -93,3 +93,39 @@
 - create password using bcrypt.hash() and save the user with enccrypted password
 - Create Login API
 - Compare passwords and throw errors if email or password is invalid
+
+10.
+
+- install the cookie-parser
+- just send the dummy cookie to the user
+- creaet GET /profile API and check if you get the cookie back
+- install jsonwebtoken
+  -In login API, after email and password validation, create a JWT token and send it to user in cookie
+  res.cookie("token", token)
+
+- Read the cookies inside your profile API and find the looged in user
+  // const cookie = req.cookie; // will not work
+  const cookies = req.cookies;
+
+Why Does the Server Attach the JWT Token to a Cookie?
+When a user logs in, the server validates the credentials, generates a JWT token, and attaches it to a cookie before sending it to the browser. Here’s why:
+
+1️⃣ Cookies Store the Token Securely
+Instead of storing the JWT in localStorage or sessionStorage, storing it in cookies provides better security:
+
+HTTP-only: The cookie cannot be accessed via JavaScript (prevents XSS attacks).
+
+Secure: Only sent over HTTPS, preventing MITM attacks.
+
+Same-Origin Restrictions: Only accessible to the domain that set it.
+
+📌 Summary
+✅ Why store JWT in a cookie?
+
+More Secure than localStorage (prevents XSS attacks).
+
+Automatic Handling: Sent with every request, no need for manual headers.
+
+Persistent Sessions: User stays logged in across tabs and refreshes.
+
+CSRF Protection: With SameSite settings.
