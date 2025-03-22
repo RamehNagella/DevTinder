@@ -129,3 +129,8 @@ Automatic Handling: Sent with every request, no need for manual headers.
 Persistent Sessions: User stays logged in across tabs and refreshes.
 
 CSRF Protection: With SameSite settings.
+
+-userAuth middleware
+
+- Add the userAuth middleware in profile API and a new sendConnectionRequest API
+  -Set the expirey of JWT token and cokkies to 7dayS

@@ -67,14 +67,20 @@ app.get("/login", async (req, res) => {
 
     if (isPasswordValid) {
       //create a token
-      const token = jwt.sign({ _id: user._id }, "DEV@tinder$123");
+      const token = jwt.sign({ _id: user._id }, "DEV@tinder$123", {
+        expiresIn: "7d"
+      });
       //add the token to cookie  and send the response back to the server
       // res.cookie("token", token);
+      // res.cookie("token", token, {
+      //   httpOnly: true, // Prevents JavaScript access
+      //   secure: process.env.NODE_ENV === "production", // Secure in HTTPS
+      //   sameSite: "Strict"
+      // });
       res.cookie("token", token, {
-        httpOnly: true, // Prevents JavaScript access
-        secure: process.env.NODE_ENV === "production", // Secure in HTTPS
-        sameSite: "Strict"
+        expires: new Date(Date.now() + 84 * 3600000)
       });
+      //7days cookie will expire
 
       res.send("Login Successfu!!");
     } else {
