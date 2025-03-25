@@ -72,31 +72,32 @@ const userSchema = new mongoose.Schema(
     timestamps: true // stores created time when user loggedIN
   }
 );
+
 userSchema.methods.getJWT = async function () {
   // here arrow function is not used because it doesnot spport the this
   const user = this;
-  console.log(user._id);
+
   const token = await jwt.sign({ _id: user._id }, "DEV@tinder$123", {
     expiresIn: "7d"
   });
-  // console.log("token:", token);
 
   return token;
 };
-//storign password encryption in userSchema
 
+//storing password encryption in userSchema
 userSchema.methods.getVerifiedPassword = async function (passwordInputByUser) {
   const user = this;
-
   const passwordHash = user.password;
   // const validatePassword = await bcrypt.compare(password, user.password); wrong
+
   const validatePassword = await bcrypt.compare(
     passwordInputByUser,
-    this.password
+    passwordHash
   );
 
   return validatePassword;
 };
+
 //create mongoose model
 // const model = mongoose.model(modelName, Schema)
 // const userModel = mongoose.model("User", userSchema);

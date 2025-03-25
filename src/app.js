@@ -1,16 +1,34 @@
 const express = require("express");
-const connectDB = require("./config/database");
 const app = express();
-const User = require("./models/user");
-const { validateSignUpData, validateLoginData } = require("./utils/validation");
-const bcrypt = require("bcrypt");
+
+const connectDB = require("./config/database");
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
-const { userAuth } = require("./middlewares/auth");
+
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestHeader = require("./routes/request");
 
 app.use(express.json());
 app.use(cookieParser()); // to read the cookie
 
+app.use("/", authRouter);
+app.use("/", requestHeader);
+app.use("/", profileRouter);
+
+connectDB()
+  .then(() => {
+    console.log("Database connection establised...");
+    app.listen(7777, () => {
+      console.log(
+        "server connected succssfully and listening to the port 7777...."
+      );
+    });
+  })
+  .catch((err) => {
+    console.log("cannot connect databse!");
+  });
+
+/*
 app.post("/signup", async (req, res) => {
   const { firstName, lastName, emailId, password } = req.body;
   try {
@@ -92,6 +110,8 @@ app.get("/login", async (req, res) => {
     res.status(400).send(" ERROR: " + err.message);
   }
 });
+
+
 //cookie will be sent to the user with token
 //get profile
 app.get("/profile", userAuth, async (req, res) => {
@@ -251,14 +271,5 @@ app.patch("/email", async (req, res) => {
     res.status(500).send("Somthing went wrong");
   }
 });
+
 */
-connectDB()
-  .then(() => {
-    console.log("Database connection establised...");
-    app.listen(7777, () => {
-      console.log("server connected succssfully and listening to the port.");
-    });
-  })
-  .catch((err) => {
-    console.log("cannot connect databse!");
-  });

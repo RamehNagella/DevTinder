@@ -2,7 +2,7 @@ const validator = require("validator");
 
 const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body;
-  console.log(password);
+  // console.log(password, firstName, lastName, emailId);
 
   if (!firstName || !lastName) {
     throw new Error("user name not valid.");
@@ -14,12 +14,14 @@ const validateSignUpData = (req) => {
   else if (!validator.isEmail(emailId)) {
     throw new Error("Email is not valid.");
   } else if (!validator.isStrongPassword(password)) {
-    throw new Error("plase enter the strong password.");
+    console.log("true");
+    throw new Error("please enter the strong password.");
   }
 };
 
 const validateLoginData = (req) => {
   const { emailId, password } = req.body;
+
   if (!validator.isEmail(emailId)) {
     throw new Error("Invalid Credetials");
   } else if (!emailId || !password) {
@@ -27,4 +29,29 @@ const validateLoginData = (req) => {
   }
 };
 
-module.exports = { validateSignUpData, validateLoginData };
+const validateEditProfileData = (req) => {
+  const allowedEditFields = [
+    "firstName",
+    "lastName",
+    "age",
+    "photoUrl",
+    "about",
+    "skills"
+  ];
+
+  const isUpdateAllowed = Object.keys(req.body).every((key) =>
+    allowedEditFields.includes(key)
+  );
+  // console.log("//", isUpdateAllowed);
+  if (!isUpdateAllowed) {
+    throw new Error("Enter correct data");
+  }
+
+  return isUpdateAllowed;
+};
+
+module.exports = {
+  validateSignUpData,
+  validateLoginData,
+  validateEditProfileData
+};

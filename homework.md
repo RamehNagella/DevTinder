@@ -135,3 +135,16 @@ CSRF Protection: With SameSite settings.
 - Add the userAuth middleware in profile API and a new sendConnectionRequest API
 - Set the expirey of JWT token and cokkies to 7dayS- - Create userSchem method to getJWT()
 - Create userSchema method to getVerifiedPassword()
+
+- Explore tinder APIs
+- Create a list all API you can think of in Dev Tinder
+- Group multiple routes under respective routes
+
+- Read documentation for express.Router
+- Create routes folder for managing auth.profile, request router
+- Create authRouter, pofileRouter, requestRouter
+- Import this routers in app.js
+- Create POST /logout API
+- Create PATCH /profile/edit
+- Create PATCH /profile/password Api =>forgot password api
+- Make sure validate all data in every POST PATCH apis
