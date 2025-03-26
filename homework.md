@@ -148,3 +148,17 @@ CSRF Protection: With SameSite settings.
 - Create PATCH /profile/edit
 - Create PATCH /profile/password Api =>forgot password api
 - Make sure validate all data in every POST PATCH apis
+
+- Create Connection request Schema
+- Send Connection Request API
+- Proper validation of Data
+
+- Think about ALL corner cases
+
+- Schema.pre("save") function
+- Read more about indexes in MongoDB
+- Why do we need index in DB
+- What is the advantages and disadvantages of creating?
+- Read this artical about compound indexes
+
+- ALWAYS THINK ABOUT CORNER CASES

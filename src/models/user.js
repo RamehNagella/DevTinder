@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+
       validate: {
         validator: function (value) {
           console.log("Validating email: ", value);
@@ -81,6 +82,9 @@ const userSchema = new mongoose.Schema(
     timestamps: true // stores created time when user loggedIN
   }
 );
+
+userSchema.index({ firstName: 1 });
+userSchema.index({ firstName: 1, age: 1 });
 
 userSchema.methods.getJWT = async function () {
   // here arrow function is not used because it doesnot spport the this
