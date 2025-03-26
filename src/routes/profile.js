@@ -6,10 +6,12 @@ const User = require("../models/user");
 const { validateEditProfileData } = require("../utils/validation");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 router.get("/profile/view", userAuth, async (req, res) => {
+  // const { emailId } = req.body;
+  // const user = await User.findOne({ emailId: emailId });
   const user = req.user;
-
   res.status(200).json(user);
 });
 
@@ -24,8 +26,6 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
   // send response
 
   try {
-    console.log(">>", validateEditProfileData(req));
-
     if (!validateEditProfileData(req)) {
       throw new Error("Invalid Edit Request.");
     }
@@ -62,7 +62,8 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
-router.patch("/profile/password", async (req, res) => {
+//updating the password.
+router.patch("/profile/password", userAuth, async (req, res) => {
   //read the user entered password from UI
   //validate the password weather it is strong or not
   // find the user document with emailId
@@ -70,24 +71,34 @@ router.patch("/profile/password", async (req, res) => {
   // then save the userDocument
 
   try {
-    const { emailId, password } = req.body;
-
-    if (!validator.isStrongPassword(password)) {
-      throw new Error("Plaese Enter Strong password.");
+    const user = await User.findById(req.user._id);
+    console.log(user);
+    if (!user) {
+      throw new Error("User not found.");
     }
 
-    const hashPassword = await bcrypt.hash(password, 10);
+    const { emailId, oldPassword, newPassword } = req.body;
 
-    const updatedUser = await User.findOneAndUpdate(
-      { emailId: emailId },
-      { password: hashPassword }
-    );
+    if (!validator.isStrongPassword(newPassword)) {
+      throw new Error("Plaese Enter Strong password.");
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
 
-    await updatedUser.save();
+    if (!isMatch) {
+      throw new Error("Incorrect old password.");
+    }
 
-    res
-      .status(200)
-      .json({ message: "Password updated successfully.", data: updatedUser });
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    // const updatedUser = await User.findByIdAndUpdate(
+    //   { _id: req.user._id },
+    //   { password: hashPassword }
+    // );
+
+    user.password = hashPassword;
+
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully." });
   } catch (err) {
     res.status(400).json("ERROR: " + err.message);
   }

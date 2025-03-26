@@ -4,18 +4,24 @@ const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body;
   // console.log(password, firstName, lastName, emailId);
 
+  // console.log(validator.isEmail(emailId));
   if (!firstName || !lastName) {
-    throw new Error("user name not valid.");
+    return false;
   }
   //first name length, lastname length validation is done at userSchema level when we defining the schema
   //   else if (!emailId || !password) {
   //     throw new Error("Invalid email address");
   //   } it is not required because user will definately enters the email and all
   else if (!validator.isEmail(emailId)) {
-    throw new Error("Email is not valid.");
+    // console.log(validator.isEmail(emailId));
+    // throw new Error("Email is not valid.");
+    return false;
   } else if (!validator.isStrongPassword(password)) {
-    console.log("true");
-    throw new Error("please enter the strong password.");
+    // console.log("true");
+    // throw new Error("please enter the strong password.");
+    return false;
+  } else {
+    return true;
   }
 };
 

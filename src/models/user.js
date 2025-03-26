@@ -23,11 +23,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("Invalid email address:" + value);
-        }
+      validate: {
+        validator: function (value) {
+          console.log("Validating email: ", value);
+          return validator.isEmail(value);
+        },
+        message: (props) => `Invalid email: ${props.value}`
       }
+
+      // validate(value) {
+      //   if (!validator.isEmail(value)) {
+      //     throw new Error("Invalid email address:" + value);
+      //   }
+      //   return true;
+      // }
     },
     password: {
       type: String,
