@@ -6,6 +6,7 @@ const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
+//API to send the request(interested or ignored) to other user
 router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
   // 1. read the status userIds from req
   // 2. make the new connection request instance
@@ -76,6 +77,60 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
     res.status(400).json("ERROR: " + err.message);
   }
 });
+
+//API  to accept(accepted/rejected) the requested connections
+router.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    // read the status and request id
+    // allow if status is accepted and rejected, dont allow other requests
+    // verify requestId and loggedInUser id to accept or rejct the request
+    //because only authroized has authority on his requests
+
+    // find the docs from connectionRequest collection that were recieved for  loggedIn user
+    // if and only if the status is interested, other status docs dont find
+    // find the docs ONLY for requestId
+
+    // then send th response with status (read from api query)
+
+    try {
+      const loggedInUser = req.user;
+      const { status, requestId } = req.params;
+
+      const allowedStatus = ["accepted", "rejected"]; // this status comes from UI when user click on options(accept/reject)
+
+      //verify the status is allowed status or not
+      if (!allowedStatus.includes(status)) {
+        return res.status(404).json("Status is not allowed.");
+      }
+
+      // find the connection Requests that were recieved to the loggedIn user and verify that toUserId is loggedIn user or not
+      // connection request Id should be valid
+
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested"
+      });
+      if (!connectionRequest) {
+        return res.status(404).json({ message: "No requests found." });
+      }
+
+      // accept/ reject the connection request
+      connectionRequest.status = status;
+
+      const data = await connectionRequest.save();
+
+      res.status(200).json({
+        message: `${loggedInUser.firstName} has ${status} your request.`,
+        data: data
+      });
+    } catch (err) {
+      res.status(500).json("ERROR: " + err.message);
+    }
+  }
+);
 
 router.get("/sendConnectionRequest", userAuth, async (req, res) => {
   const user = req.user;
