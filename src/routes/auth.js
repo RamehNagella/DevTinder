@@ -38,11 +38,20 @@ router.post("/signup", async (req, res) => {
       password: hashPW
     });
 
-    await user.save();
+    const savedUser = await user.save();
 
-    res.status(200).json("user data saved successfully.");
+    //directly logging into application after signup
+    const token = await savedUser.getJWT();
+
+    res.cookie("token", token, {
+      expires: new Date(Date.now() + 8 * 3600000)
+    });
+
+    res
+      .status(200)
+      .json({ message: "user data saved successfully.", data: savedUser });
   } catch (err) {
-    res.status(400).json("ERROR: " + err.message);
+    res.status(400).json({ error: err.message });
   }
 });
 
@@ -84,11 +93,12 @@ router.post("/login", async (req, res) => {
       expires: new Date(Date.now() + 8 * 3600000)
     });
 
-    res
-      .status(200)
-      .json({ message: `${user.firstName} you can now explore here` });
+    res.status(200).json({
+      message: `${user.firstName} you can now explore here`,
+      user
+    });
   } catch (err) {
-    res.status(400).json("ERROR: " + err.message);
+    res.status(400).json({ error: err.message });
   }
 });
 

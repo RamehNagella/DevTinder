@@ -40,6 +40,7 @@ const validateEditProfileData = (req) => {
     "firstName",
     "lastName",
     "age",
+    "gender",
     "photoUrl",
     "about",
     "skills"

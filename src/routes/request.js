@@ -72,7 +72,9 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
 
     await data.save();
 
-    res.status(200).json(req.user.firstName + " was sent connection request ");
+    res
+      .status(200)
+      .json(req.user.firstName + " was " + status + " connection request ");
   } catch (err) {
     res.status(400).json("ERROR: " + err.message);
   }
@@ -83,6 +85,7 @@ router.post(
   "/request/review/:status/:requestId",
   userAuth,
   async (req, res) => {
+    // console.log("iam clicked");
     // read the status and request id
     // allow if status is accepted and rejected, dont allow other requests
     // verify requestId and loggedInUser id to accept or rejct the request
@@ -113,6 +116,7 @@ router.post(
         toUserId: loggedInUser._id,
         status: "interested"
       });
+      console.log("cr", connectionRequest);
       if (!connectionRequest) {
         return res.status(404).json({ message: "No requests found." });
       }

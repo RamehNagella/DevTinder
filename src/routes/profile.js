@@ -12,12 +12,15 @@ router.get("/profile/view", userAuth, async (req, res) => {
   // const { emailId } = req.body;
   // const user = await User.findOne({ emailId: emailId });
   const user = req.user;
-  res.status(200).json(user);
+  res
+    .status(200)
+    .json({ message: user.firstName + " your data is here", user });
 });
 
 //create UPDATE api
 
 router.patch("/profile/edit", userAuth, async (req, res) => {
+  // console.log("/profile/edit", req.body);
   // take user entered update details
   // restrict the update list to one some fields or dont give permission to update emailId and password
   // verify the user entered update list
@@ -27,6 +30,7 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
 
   try {
     if (!validateEditProfileData(req)) {
+      console.log(true);
       throw new Error("Invalid Edit Request.");
     }
 
@@ -48,14 +52,16 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
     // console.log(req.body);
 
     Object.keys(req.body).forEach((key) => {
+      // console.log("key", key);
       loggedInUser[key] = req.body[key];
     });
 
+    // console.log("loggedIN", loggedInUser);
     await loggedInUser.save();
 
     res.status(200).json({
       message: `${loggedInUser.firstName} your profile was updated successfully.`,
-      data: loggedInUser
+      loggedInUser
     });
   } catch (err) {
     res.status(400).json("ERROR: " + err.message);
@@ -72,7 +78,7 @@ router.patch("/profile/password", userAuth, async (req, res) => {
 
   try {
     const user = await User.findById(req.user._id);
-    console.log(user);
+    // console.log(user);
     if (!user) {
       throw new Error("User not found.");
     }
