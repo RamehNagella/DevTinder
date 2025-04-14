@@ -27,10 +27,19 @@ app.use("/", userRouter);
 connectDB()
   .then(() => {
     console.log("Database connection establised...");
-    app.listen(7777, () => {
+
+    const server = app.listen(7777, () => {
       console.log(
         "server connected succssfully and listening to the port 7777...."
       );
+    });
+    // ✅ Attach error handler
+    server.on("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        console.error("❌ Port 7777 is already in use!");
+      } else {
+        console.error("❌ Server error:", err);
+      }
     });
   })
   .catch((err) => {
