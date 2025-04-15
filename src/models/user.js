@@ -31,13 +31,6 @@ const userSchema = new mongoose.Schema(
         },
         message: (props) => `Invalid email: ${props.value}`
       }
-
-      // validate(value) {
-      //   if (!validator.isEmail(value)) {
-      //     throw new Error("Invalid email address:" + value);
-      //   }
-      //   return true;
-      // }
     },
     password: {
       type: String,
