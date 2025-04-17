@@ -83,7 +83,7 @@ userSchema.methods.getJWT = async function () {
   // here arrow function is not used because it doesnot spport the this
   const user = this;
 
-  const token = await jwt.sign({ _id: user._id }, "DEV@tinder$123", {
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d"
   });
 
