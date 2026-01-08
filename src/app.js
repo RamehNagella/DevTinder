@@ -31,7 +31,7 @@ connectDB()
 
     const server = app.listen(process.env.PORT, () => {
       console.log(
-        "server connected succssfully and listening to the port 7777...."
+        "server connected succssfully and listening to the port 7777....", "\n"
       );
     });
     // ✅ Attach error handler
