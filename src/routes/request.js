@@ -24,14 +24,6 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
     const toUserId = new mongoose.Types.ObjectId(req.params.toUserId);
     const status = req.params.status;
 
-    // console.log("fromUserId:", fromUserId);
-    // console.log("toUserId:", toUserId);
-    // console.log(fromUserId.toString() === toUserId.toString());
-
-    // if (!toUserId || !fromUserId) {
-    //   return res.status(404).json({ message: "Users was not found." });
-    // }
-
     // avoid sending request to yourself
     if (fromUserId.toString() === toUserId.toString()) {
       return res

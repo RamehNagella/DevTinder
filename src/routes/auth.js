@@ -13,22 +13,16 @@ const User = require("../models/user");
 const { JsonWebTokenError } = require("jsonwebtoken");
 
 router.post("/signup", async (req, res) => {
-  //take the user details llike email, pasword from req body
-  // validate req
-  // hash the password using bcryptjs package to store the password in encrypted way
-  // save the user details
-  // send the reponse
-
   try {
+  //take the user details like email, pasword from req body
     const { firstName, lastName, emailId, password } = req.body;
-
-    // if (validateSignUpData(req)) {
-    //   throw new Error("Invalid Credienatials.");
-    // }
+    
+    // validate req
     if (!validateSignUpData(req)) {
       throw new Error("Enter correct email or strong password");
     }
-
+    
+    // hash the password using bcryptjs package to store the password in encrypted way
     const hashPW = await bcrypt.hash(password, 10);
 
     const user = new User({
@@ -56,43 +50,32 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  // extract user credenetails form req body
-  // verify they are coming or not from req. body
-  // validate credentials
-  // decrypt the stored password
-  // once password is verified,
-  //  take the userId from database with the help of user emailId
-  //  create a token with JWT
-  //WITH JWT.sign(userData, secretekey, signature);
-  //store the jwt token  in cookie(for better safety)
-  //send the  cookie to store in the browser.
-  // then provide the UI for the user
-
+  // Extract user credenetails form req body
   const { emailId, password } = req.body;
-  // console.log(emailId, password);
-
   try {
     validateLoginData(req);
-    // console.log(validateLoginData(req));
 
+    // Verify they are coming or not from req. body
     const user = await User.findOne({ emailId: emailId });
-    // console.log(user);
 
     if (!user) {
       throw new Error("Invalid credentials.");
     }
-    // const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+    // Decrypt the stored password and verify
     const isPasswordValid = await user.getVerifiedPassword(password);
-
     if (!isPasswordValid) {
       throw new Error("Invalid credientials.");
     }
+    // Genearate the token using JWT
     const token = await user.getJWT();
 
+    //Store the jwt token  in cookie(for better safety)
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000)
     });
 
+    //send the  cookie to store in the browser.
     res.status(200).json({
       message: `${user.firstName} you can now explore here`,
       user
@@ -103,6 +86,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
+  // set cookie to null or expire the cookie time to logout
   res.cookie("token", null, {
     expires: new Date(Date.now())
   });
@@ -110,7 +94,7 @@ router.post("/logout", async (req, res) => {
 });
 
 //forgot password
-//to create the api for forgot password we need to user 2 APIs
+//to create the api for forgot password we need to use 2 APIs
 // one is for GENERATE THE JWT RESET TOKEN
 // second is for VERIFY THE TOKEN & RESET NEW PASSWORD
 
@@ -118,17 +102,16 @@ router.post("/logout", async (req, res) => {
 // PATCH /reset-password
 
 router.post("/forgot-password", async (req, res) => {
-  // 1. take the user entered email
-  // 2. verify weather emailId is already exist or not in the database
-  // 3. if exist generate a secure reset token
-  // 4. send the token to email(or display it for now)
   try {
+    // 1. take the user entered email
     const { emailId } = req.body;
-
+    
+    // 2. verify weather emailId is already exist or not in the database
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
       throw new Error("Enter correct emailId. ");
     }
+    // 3. if exist generate a secure reset token
     const resetToken = await jwt.sign(emailId, "Dev@tinder$123", {
       expiresIn: 15 * 60 * 1000
     });
@@ -143,24 +126,25 @@ router.post("/forgot-password", async (req, res) => {
 });
 
 router.patch("/verify-token", async (req, res) => {
-  // 1.take the token and new password from req.body
-  // 2. verify the token with secrete key which was used while creating reset token
-  // 3. then extact the emailId (userDetails) from verifiedToken
-  // 4. find the document from db with extracted emailId
-  // 4. validate the new password for strongness
   // 5. then hash the password and store it in DB
-
+  
   try {
+    // 1.take the token and new password from req.body
     const { token, newPassword } = req.body;
-
+    
+    // 2. verify the token with secrete key which was used while creating reset token
     const verifyToken = await jwt.verify(token, "Dev@tinder$123");
+    
+    // 3. then extact the emailId (userDetails) from verifiedToken
     const emailId = verifyToken.emailId;
-
+    
+    // 4. find the user document from db with extracted emailId
     const user = await User.findOne({ emailId });
     if (!user) {
       throw new Error("Invalid token or token was expired");
     }
-
+    
+    // 5.Validate the new password for strongness
     if (!validator.isStrongPassword(newPassword)) {
       throw new Error("Enter strong password.");
     }

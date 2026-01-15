@@ -143,7 +143,6 @@ router.get("/user/feed", userAuth, async (req, res) => {
       .select(USER_SAFE_DATA)
       .skip(skip)
       .limit(limit);
-    // console.log("users", users);
     res.status(200).json(users);
   } catch (err) {
     res.status(400).json({ message: err.message });
