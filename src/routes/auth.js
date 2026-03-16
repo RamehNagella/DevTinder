@@ -38,7 +38,6 @@ router.post("/signup", async (req, res) => {
     const token = await savedUser.getJWT();
 
     res.cookie("token", token, {
-      expires: new Date(Date.now() + 8 * 3600000),
       httpOnly: true,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -74,7 +73,6 @@ router.post("/login", async (req, res) => {
     const token = await user.getJWT();
     //Store the jwt token  in cookie(for better safety)
     res.cookie("token", token, {
-      expires: new Date(Date.now() + 8 * 3600000),
       httpOnly: true,
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
