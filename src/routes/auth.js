@@ -39,6 +39,9 @@ router.post("/signup", async (req, res) => {
 
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res
@@ -72,6 +75,9 @@ router.post("/login", async (req, res) => {
     //Store the jwt token  in cookie(for better safety)
     res.cookie("token", token, {
       expires: new Date(Date.now() + 8 * 3600000),
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     //send the  cookie to store in the browser.
@@ -88,6 +94,8 @@ router.post("/logout", async (req, res) => {
   // set cookie to null or expire the cookie time to logout
   res.cookie("token", null, {
     expires: new Date(Date.now()),
+    httpOnly: true,
+    sameSite: "lax",
   });
   res.send("user logout!!");
 });
@@ -111,7 +119,7 @@ router.post("/forgot-password", async (req, res) => {
       throw new Error("Enter correct emailId. ");
     }
     // 3. if exist generate a secure reset token
-    const resetToken = await jwt.sign(emailId, process.env.JWT_SECRET, {
+    const resetToken = jwt.sign(emailId, process.env.JWT_SECRET, {
       expiresIn: 15 * 60 * 1000,
     });
 

@@ -14,7 +14,7 @@ const userAuth = async (req, res, next) => {
       // throw new Error("Invalide token!!");
     }
     // Verify the token
-    console.log(JSON.stringify(process.env.JWT_SECRET));
+    // console.log(JSON.stringify(process.env.JWT_SECRET));
     // If you see " Dev@Tinder$789 " with spaces, that's the problem
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(decodedToken);
