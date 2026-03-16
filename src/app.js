@@ -21,10 +21,10 @@ app.use(
 app.use(express.json());
 app.use(cookieParser()); // to read the cookie
 
-app.use("/", authRouter);
-app.use("/", requestHeader);
-app.use("/", profileRouter);
-app.use("/", userRouter);
+app.use("/api", authRouter);
+app.use("/api", requestHeader);
+app.use("/api", profileRouter);
+app.use("/api", userRouter);
 
 connectDB()
   .then(() => {
