@@ -9,13 +9,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minLength: 4,
-      maxLength: 50
+      maxLength: 50,
     },
     lastName: {
       type: String,
       required: true,
       minLength: 4,
-      maxLength: 50
+      maxLength: 50,
     },
     emailId: {
       type: String,
@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema(
 
       validate: {
         validator: function (value) {
-          console.log("Validating email: ", value);
+          // console.log("Validating email: ", value);
           return validator.isEmail(value);
         },
-        message: (props) => `Invalid email: ${props.value}`
-      }
+        message: (props) => `Invalid email: ${props.value}`,
+      },
     },
     password: {
       type: String,
@@ -39,11 +39,11 @@ const userSchema = new mongoose.Schema(
         if (!validator.isStrongPassword(value)) {
           throw new Error("Password is not strong: " + value);
         }
-      }
+      },
     },
     age: {
       type: Number,
-      min: 15
+      min: 15,
     },
     gender: {
       type: String,
@@ -51,29 +51,29 @@ const userSchema = new mongoose.Schema(
         if (!["male", "female", "others"].includes(value)) {
           throw new Error("Gender data not valid.");
         }
-      }
+      },
     },
     photoUrl: {
       type: String,
       default:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/USAFA_Hosts_Elon_Musk_%28Image_1_of_17%29_%28cropped%29.jpg/450px-USAFA_Hosts_Elon_Musk_%28Image_1_of_17%29_%28cropped%29.jpg",
+        "https://i.pinimg.com/736x/9e/66/eb/9e66eb7bba064bc77781893cc42dd1bf.jpg",
       validate(value) {
         if (!validator.isURL(value)) {
           throw new Error("Invalid Phot URL: " + value);
         }
-      }
+      },
     },
     about: {
       type: String,
-      default: "This is the default value"
+      default: "This is the default value",
     },
     skills: {
-      type: [String]
-    }
+      type: [String],
+    },
   },
   {
-    timestamps: true // stores created time when user loggedIN
-  }
+    timestamps: true, // stores created time when user loggedIN
+  },
 );
 
 userSchema.index({ firstName: 1 });
@@ -83,8 +83,11 @@ userSchema.methods.getJWT = async function () {
   // here arrow function is not used because it doesnot spport the this
   const user = this;
 
+
+  // If you see " Dev@Tinder$789 " with spaces, that's the problem
+
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d"
+    expiresIn: "7d",
   });
 
   return token;
@@ -98,7 +101,7 @@ userSchema.methods.getVerifiedPassword = async function (passwordInputByUser) {
 
   const validatePassword = await bcrypt.compare(
     passwordInputByUser,
-    passwordHash
+    passwordHash,
   );
 
   return validatePassword;

@@ -50,8 +50,8 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
     const existingUser = await ConnectionRequest.findOne({
       $or: [
         { fromUserId: fromUserId, toUserId: toUserId },
-        { fromUserId: toUserId, toUserId: fromUserId }
-      ]
+        { fromUserId: toUserId, toUserId: fromUserId },
+      ],
     });
 
     if (existingUser) {
@@ -106,9 +106,9 @@ router.post(
       const connectionRequest = await ConnectionRequest.findOne({
         _id: requestId,
         toUserId: loggedInUser._id,
-        status: "interested"
+        status: "interested",
       });
-      console.log("cr", connectionRequest);
+      // console.log("cr", connectionRequest);
       if (!connectionRequest) {
         return res.status(404).json({ message: "No requests found." });
       }
@@ -120,12 +120,12 @@ router.post(
 
       res.status(200).json({
         message: `${loggedInUser.firstName} has ${status} your request.`,
-        data: data
+        data: data,
       });
     } catch (err) {
       res.status(500).json("ERROR: " + err.message);
     }
-  }
+  },
 );
 
 router.get("/sendConnectionRequest", userAuth, async (req, res) => {

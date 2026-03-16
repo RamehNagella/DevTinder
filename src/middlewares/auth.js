@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
@@ -15,6 +14,8 @@ const userAuth = async (req, res, next) => {
       // throw new Error("Invalide token!!");
     }
     // Verify the token
+    console.log(JSON.stringify(process.env.JWT_SECRET));
+    // If you see " Dev@Tinder$789 " with spaces, that's the problem
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(decodedToken);
 
@@ -37,7 +38,7 @@ const userAuth = async (req, res, next) => {
 };
 
 module.exports = {
-  userAuth
+  userAuth,
 };
 /*
 const adminAuth = (req, res, next) => {
@@ -70,5 +71,3 @@ module.exports = {
   userAuth
 };
 */
-
-

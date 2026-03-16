@@ -1,10 +1,11 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 
 const connectDB = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-require("dotenv").config();
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
@@ -14,8 +15,8 @@ const userRouter = require("./routes/user");
 app.use(
   cors({
     origin: "http://localhost:5173",
-    credentials: true
-  })
+    credentials: true,
+  }),
 );
 app.use(express.json());
 app.use(cookieParser()); // to read the cookie
@@ -31,7 +32,8 @@ connectDB()
 
     const server = app.listen(process.env.PORT, () => {
       console.log(
-        "server connected succssfully and listening to the port 7777....", "\n"
+        "server connected succssfully and listening to the port 7777....",
+        "\n",
       );
     });
     // ✅ Attach error handler

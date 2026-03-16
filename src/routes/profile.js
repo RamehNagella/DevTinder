@@ -9,14 +9,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 router.get("/profile/view", userAuth, async (req, res) => {
-
   const user = req.user;
   res
     .status(200)
     .json({ message: user.firstName + " your data is here", user });
 });
 
-//create api to UPDATE user profile 
+//create api to UPDATE user profile
 router.patch("/profile/edit", userAuth, async (req, res) => {
   // console.log("/profile/edit", req.body);
   // take user entered update details
@@ -28,21 +27,22 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
 
   try {
     if (!validateEditProfileData(req)) {
-      console.log(true);
+      // console.log(true);
       throw new Error("Invalid Edit Request.");
     }
-    
+
     const loggedInUser = req.user;
 
     Object.keys(req.body).forEach((key) => {
       loggedInUser[key] = req.body[key];
     });
+    // console.log("edit success");
 
     await loggedInUser.save();
 
     res.status(200).json({
       message: `${loggedInUser.firstName} your profile was updated successfully.`,
-      loggedInUser
+      loggedInUser,
     });
   } catch (err) {
     res.status(400).json("ERROR: " + err.message);
@@ -94,5 +94,3 @@ router.get("/sendConnectionRequest", userAuth, async (req, res) => {
   res.status(200).json(user.firstName + " was sent connection request");
 });
 module.exports = router;
-
-
