@@ -14,8 +14,8 @@ const userRouter = require("./routes/user");
 
 app.use(
   cors({
-    // origin: "http://localhost:5173",
-    origin: true,
+    origin: "http://localhost:5173",
+    // origin: true,
     credentials: true,
   }),
 );
