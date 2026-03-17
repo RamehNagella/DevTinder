@@ -36,11 +36,12 @@ router.post("/signup", async (req, res) => {
 
     //directly logging into application after signup
     const token = await savedUser.getJWT();
+    console.log("signup", token);
 
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      expires: new Date(Date.now() + 7 * 24 * 3600000),
     });
 
     res
@@ -71,11 +72,13 @@ router.post("/login", async (req, res) => {
     }
     // Genearate the token using JWT
     const token = await user.getJWT();
+    console.log("login", token);
+
     //Store the jwt token  in cookie(for better safety)
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      expires: new Date(Date.now() + 8 * 24 * 3600000),
     });
 
     //send the  cookie to store in the browser.
@@ -90,9 +93,15 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", async (req, res) => {
   // set cookie to null or expire the cookie time to logout
-  res.cookie("token", null, {
-    expires: new Date(Date.now()),
+  // res.cookie("token", null, {
+  //   expires: new Date(Date.now()),
+  //   httpOnly: true,
+  //   sameSite: "lax",
+  // });
+  res.clearCookie("token", {
     httpOnly: true,
+    // secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "lax",
   });
   res.send("user logout!!");
@@ -138,7 +147,7 @@ router.patch("/verify-token", async (req, res) => {
     const { token, newPassword } = req.body;
 
     // 2. verify the token with secrete key which was used while creating reset token
-    const verifyToken = await jwt.verify(token, process.env.JWT_SECRET);
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // 3. then extact the emailId (userDetails) from verifiedToken
     const emailId = verifyToken.emailId;

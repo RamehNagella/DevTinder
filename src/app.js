@@ -3,30 +3,31 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+const cors = require("cors");
 const connectDB = require("./config/database");
 const cookieParser = require("cookie-parser");
-const cors = require("cors");
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://13.60.80.186"],
+    // origin: "http://13.60.80.186",
+    // origin: true,
+    credentials: true,
+  }),
+);
+
+app.use(express.json());
+app.use(cookieParser()); // to read the cookie
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestHeader = require("./routes/request");
 const userRouter = require("./routes/user");
 
-app.use(
-  cors({
-    // origin: "http://localhost:5173",
-    origin: "http://13.60.80.186",
-    // origin: true,
-    credentials: true,
-  }),
-);
-app.use(express.json());
-app.use(cookieParser()); // to read the cookie
-
-app.use("/api", authRouter);
-app.use("/api", requestHeader);
-app.use("/api", profileRouter);
-app.use("/api", userRouter);
+app.use("/", authRouter);
+app.use("/", requestHeader);
+app.use("/", profileRouter);
+app.use("/", userRouter);
 
 connectDB()
   .then(() => {
