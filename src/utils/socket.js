@@ -11,7 +11,13 @@ const getHashRoomId = (userId, targetUserId) => {
 const initializeSocket = (server) => {
   const io = socket(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: [
+        "http://localhost:5173", // dev
+        "http://13.60.80.186", // prod IP
+        "https://yourdomain.com", // prod domain if you have one
+      ],
+      methods: ["GET", "POST"],
+      credentials: true,
     },
   });
   //to accept the connection
@@ -22,7 +28,7 @@ const initializeSocket = (server) => {
       // socket.join(room);
       // const roomId = [userId, targetUserId].sort().join("_");
       const roomId = getHashRoomId(userId, targetUserId);
-      // console.log(firstName + " Joining RoomId : ", roomId);
+      console.log(firstName + " Joining RoomId : ", roomId);
       socket.join(roomId);
     });
     //listening the messages sent from client
@@ -33,7 +39,7 @@ const initializeSocket = (server) => {
           // const roomId = [userId, targetUserId].sort().join("_");
           const roomId = getHashRoomId(userId, targetUserId);
           //get the message from userId(loggedIn user)
-          // console.log(firstName + ": " + text);
+          console.log(firstName + ": " + text);
 
           //save the message
           let chat = await Chat.findOne({
