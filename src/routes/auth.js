@@ -72,12 +72,13 @@ router.post("/login", async (req, res) => {
     }
     // Genearate the token using JWT
     const token = await user.getJWT();
-    console.log("login", token);
+    // console.log("login", token);
 
     //Store the jwt token  in cookie(for better safety)
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
+      path: "/",
       expires: new Date(Date.now() + 8 * 24 * 3600000),
     });
 
@@ -119,16 +120,20 @@ router.post("/forgot-password", async (req, res) => {
   try {
     // 1. take the user entered email
     const { emailId } = req.body;
+    console.log("email: ", emailId);
 
     // 2. verify weather emailId is already exist or not in the database
     const user = await User.findOne({ emailId: emailId });
+    // console.log("user: ", user);
+
     if (!user) {
       throw new Error("Enter correct emailId. ");
     }
     // 3. if exist generate a secure reset token
-    const resetToken = jwt.sign(emailId, process.env.JWT_SECRET, {
+    const resetToken = jwt.sign({ emailId }, process.env.JWT_SECRET, {
       expiresIn: 15 * 60 * 1000,
     });
+    // console.log("//", resetToken);
 
     // Send the token via email (For now, logging it)
     // console.log(`Password Reset Token (Send via Email): ${resetToken}`);
