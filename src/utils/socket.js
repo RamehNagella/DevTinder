@@ -35,17 +35,18 @@ const initializeSocket = (server) => {
     //listening the messages sent from client
     socket.on(
       "sendMessage",
-      async ({ firstName, lastName, userId, targetUserId, text, sentTime }) => {
+      async ({ firstName, lastName, userId, targetUserId, text }) => {
         try {
           // const roomId = [userId, targetUserId].sort().join("_");
           const roomId = getHashRoomId(userId, targetUserId);
           //get the message from userId(loggedIn user)
-          console.log(firstName + ": " + text, sentTime);
+          console.log(firstName + ": " + text);
 
           //save the message
           let chat = await Chat.findOne({
             participants: { $all: [userId, targetUserId] },
           });
+
           if (!chat) {
             chat = new Chat({
               participants: [userId, targetUserId],
@@ -55,11 +56,15 @@ const initializeSocket = (server) => {
           chat.messages.push({
             senderId: userId,
             text,
-            sentTime,
           });
           await chat.save();
+          // console.log("sendMessage: ", chat);
+          const lastMessage = chat.messages[chat.messages.length - 1];
+          // console.log(lastMessage);
+          const sentTime = lastMessage.createdAt;
+          // console.log(sentTime);
           //send the message to targetUserId(friend)
-          io.to(roomId).emit("messageRecieved", {
+          io.to(roomId).emit("messageReceived", {
             firstName,
             lastName,
             text,
