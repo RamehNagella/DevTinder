@@ -1,6 +1,7 @@
 const socket = require("socket.io");
 const crypto = require("crypto");
 const { Chat } = require("../models/chat");
+const { send } = require("process");
 
 const getHashRoomId = (userId, targetUserId) => {
   return crypto
@@ -34,12 +35,12 @@ const initializeSocket = (server) => {
     //listening the messages sent from client
     socket.on(
       "sendMessage",
-      async ({ firstName, lastName, userId, targetUserId, text }) => {
+      async ({ firstName, lastName, userId, targetUserId, text, sentTime }) => {
         try {
           // const roomId = [userId, targetUserId].sort().join("_");
           const roomId = getHashRoomId(userId, targetUserId);
           //get the message from userId(loggedIn user)
-          console.log(firstName + ": " + text);
+          console.log(firstName + ": " + text, sentTime);
 
           //save the message
           let chat = await Chat.findOne({
@@ -54,6 +55,7 @@ const initializeSocket = (server) => {
           chat.messages.push({
             senderId: userId,
             text,
+            sentTime,
           });
           await chat.save();
           //send the message to targetUserId(friend)
@@ -61,6 +63,7 @@ const initializeSocket = (server) => {
             firstName,
             lastName,
             text,
+            sentTime,
           }); // listen this event in frontend (because from frontend we got user1 message to user2 , now we need to send this message to user2 to see on the UI(chatbox))
         } catch (err) {
           console.log(err);
