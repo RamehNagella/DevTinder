@@ -14,7 +14,7 @@ const initializeSocket = (server) => {
     cors: {
       origin: [
         "http://localhost:5173", // dev
-        "http://13.60.80.186", // prod IP
+        "http://13.60.81.53", // prod IP
         "https://yourdomain.com", // prod domain if you have one
       ],
       methods: ["GET", "POST"],
