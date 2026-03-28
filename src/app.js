@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://13.60.80.186"],
+    origin: ["http://localhost:5173", "http://13.60.81.53"],
     // origin: "http://localhost:5173",
     // origin: true,
     credentials: true,
